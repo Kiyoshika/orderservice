@@ -3,11 +3,13 @@ package org.orderservice.entities;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+import org.hibernate.query.Order;
 
 import javax.annotation.processing.Generated;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Entity
 public class OrderEntity {
@@ -16,6 +18,7 @@ public class OrderEntity {
     private Integer Id;
     private String customerId;
     private OrderStatusEnum status;
+    private String trackingNumber;
     @OneToMany
     @Cascade(CascadeType.ALL)
     private List<CartProductEntity> products;
@@ -42,26 +45,54 @@ public class OrderEntity {
         this.updateTimestamp();
     }
 
-    public void removeProduct(ProductEntity product) {
-        int removeIndex = this.getProductCartIndex(product);
+    public boolean removeProduct(String productName) {
+        int removeIndex = this.getProductCartIndex(productName);
         if (removeIndex != -1) {
             this.products.remove(removeIndex);
             this.updateTimestamp();
+            return true;
         }
+
+        return false;
     }
 
-    public void setQuantity(ProductEntity product, int quantity) {
-        if (quantity <= 0) { return; }
-        int productIndex = this.getProductCartIndex(product);
+    public boolean setQuantity(String productName, int quantity) {
+        if (quantity <= 0) { return false; }
+        int productIndex = this.getProductCartIndex(productName);
         if (productIndex != -1) {
             this.products.get(productIndex).setQuantity(quantity);
             this.updateTimestamp();
+            return true;
         }
+
+        return false;
+    }
+
+    public void setStatus(OrderStatusEnum newStatus) {
+        this.status = newStatus;
+        this.updateTimestamp();
+    }
+
+    public String placeOrder() {
+        this.status = OrderStatusEnum.PLACED;
+        this.updateTimestamp();
+        this.trackingNumber = this.generateTrackingNumber();
+        return this.trackingNumber;
     }
 
     private int getProductCartIndex(ProductEntity product) {
         for (int i = 0; i < this.products.size(); i++) {
             if (product.name.equals(this.products.get(i).getProduct().name)) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    private int getProductCartIndex(String productName) {
+        for (int i = 0; i < this.products.size(); i++) {
+            if (productName.equals(this.products.get(i).getProduct().name)) {
                 return i;
             }
         }
@@ -75,5 +106,31 @@ public class OrderEntity {
 
     private void updateTimestamp() {
         this.lastUpdatedTimestamp = this.getTimestamp();
+    }
+
+    private String generateTrackingNumber() {
+        String alphaList = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        int alphaListSize = alphaList.length();
+
+        String numberList = "0123456789";
+        int numberListSize = numberList.length();
+
+        StringBuilder newTrackingNumber = new StringBuilder();
+        Random rand = new Random();
+        for (int i = 0; i < 25; i++) {
+            switch (rand.nextInt(2)) {
+                case 0: {
+                    newTrackingNumber.append(alphaList.charAt(rand.nextInt(alphaListSize)));
+                    break;
+                }
+
+                case 1: {
+                    newTrackingNumber.append(numberList.charAt(rand.nextInt(numberListSize)));
+                    break;
+                }
+            }
+        }
+
+        return newTrackingNumber.toString();
     }
 }
