@@ -7,6 +7,9 @@ plugins {
 group = 'org'
 version = '0.0.1-SNAPSHOT'
 
+apply plugin: 'application'
+mainClassName = "org.orderservice.OrderserviceApplication"
+
 java {
 	sourceCompatibility = '17'
 }
@@ -22,6 +25,22 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
+jar {
+	manifest {
+		attributes 'Main-Class': 'org.orderservice.OrderserviceApplication'
+	}
+}
+
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+tasks.withType(Jar) {
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+	manifest {
+		attributes["Main-Class"] = "org.orderservice.OrderserviceApplication"
+	}
+}
+
+tasks.named('bootJar') {     launchScript() }

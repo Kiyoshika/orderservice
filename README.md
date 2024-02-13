@@ -11,8 +11,12 @@ This is designed to be an "internal" service not exposed to the public so no cus
 * Deliver order (moves PLACED order to DELIVERED)
 * View cart or orders
 
-## Dev Setup
+## Development
+### Setup
 For first time setup, create a postgres user `osroot` and use:
 * `create database orderservice owner 'osroot';`
 
 Set the `osrootpass` environment variable for the `osroot` password which is accessed in the application properties. NOTE: if you use an IDE, see your IDE's settings to properly set this variable.
+
+### Build and Run
+Build the project with `./gradlew build` and run with `./gradlew run` in the project root.
