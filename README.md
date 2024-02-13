@@ -15,4 +15,4 @@ This is designed to be an "internal" service not exposed to the public so no cus
 For first time setup, create a postgres user `osroot` and use:
 * `create database orderservice owner 'osroot';`
 
-Set the `ospass` environment variable for the `osrootpass` password which is accessed in the application properties. NOTE: if you use an IDE, see your IDE's settings to properly set this variable.
+Set the `osrootpass` environment variable for the `osroot` password which is accessed in the application properties. NOTE: if you use an IDE, see your IDE's settings to properly set this variable.
