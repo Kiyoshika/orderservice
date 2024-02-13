@@ -26,6 +26,14 @@ public class CartProductEntity {
         return this.product;
     }
 
+    public int getQuantity() {
+        return this.quantity;
+    }
+
+    public double getTotalPrice() {
+        return this.totalPrice;
+    }
+
     public void setQuantity(int quantity) {
         if (quantity <= 0) { return; }
         this.quantity = quantity;

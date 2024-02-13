@@ -1,5 +1,6 @@
 package org.orderservice.controllers;
 
+import com.sun.net.httpserver.HttpsServer;
 import org.hibernate.query.Order;
 import org.orderservice.entities.IOrderRepository;
 import org.orderservice.entities.OrderEntity;
@@ -81,6 +82,28 @@ public class OrderController {
         this.orderRepository.save(stagedOrder);
 
         return new ResponseEntity(trackingNumber, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/cart/view")
+    public ResponseEntity viewCart(@RequestHeader("customer-id") String customerId) {
+        OrderEntity stagedOrder = this.orderRepository.findByCustomerIdAndStatus(customerId, OrderStatusEnum.STAGED);
+        if (stagedOrder == null) {
+            return new ResponseEntity("No staged order found for this customer.", HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity(stagedOrder, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/view")
+    public ResponseEntity viewOrder(
+            @RequestHeader("customer-id") String customerId,
+            String trackingNumber) {
+        OrderEntity order = this.orderRepository.findByCustomerIdAndTrackingNumber(customerId, trackingNumber);
+        if (order == null) {
+            return new ResponseEntity("No order found for this customer and tracking number.", HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity(order, HttpStatus.OK);
     }
 
     @PostMapping(value = "/cancel")

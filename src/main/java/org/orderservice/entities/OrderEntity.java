@@ -34,6 +34,42 @@ public class OrderEntity {
         this.lastUpdatedTimestamp = this.createdTimestamp;
     }
 
+    public OrderStatusEnum getStatus() {
+        return status;
+    }
+
+    public String getTrackingNumber() {
+        return trackingNumber;
+    }
+
+    public void setTrackingNumber(String trackingNumber) {
+        this.trackingNumber = trackingNumber;
+    }
+
+    public List<CartProductEntity> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<CartProductEntity> products) {
+        this.products = products;
+    }
+
+    public String getCreatedTimestamp() {
+        return createdTimestamp;
+    }
+
+    public void setCreatedTimestamp(String createdTimestamp) {
+        this.createdTimestamp = createdTimestamp;
+    }
+
+    public String getLastUpdatedTimestamp() {
+        return lastUpdatedTimestamp;
+    }
+
+    public void setLastUpdatedTimestamp(String lastUpdatedTimestamp) {
+        this.lastUpdatedTimestamp = lastUpdatedTimestamp;
+    }
+
     public void addProduct(ProductEntity product) {
         int productIndex = this.getProductCartIndex(product);
         if (productIndex != -1) {
