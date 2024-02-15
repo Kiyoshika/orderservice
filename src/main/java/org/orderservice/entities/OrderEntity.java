@@ -70,14 +70,14 @@ public class OrderEntity {
         this.lastUpdatedTimestamp = lastUpdatedTimestamp;
     }
 
-    public void addProduct(ProductEntity product) {
+    public void addProduct(ProductEntity product, int quantity) {
         int productIndex = this.getProductCartIndex(product);
         if (productIndex != -1) {
-            this.products.get(productIndex).incrementQuantity();
+            this.products.get(productIndex).addQuantity(quantity);
             this.updateTimestamp();
             return;
         }
-        this.products.add(new CartProductEntity(product, 1));
+        this.products.add(new CartProductEntity(product, quantity));
         this.updateTimestamp();
     }
 

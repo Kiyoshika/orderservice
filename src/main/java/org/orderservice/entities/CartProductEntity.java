@@ -34,6 +34,12 @@ public class CartProductEntity {
         return this.totalPrice;
     }
 
+    public void addQuantity(int quantity) {
+        if (quantity <= 0) { return; }
+        this.quantity += quantity;
+        this.totalPrice += quantity * this.product.unitPrice;
+    }
+
     public void setQuantity(int quantity) {
         if (quantity <= 0) { return; }
         this.quantity = quantity;

@@ -19,18 +19,20 @@ public class OrderController {
         this.orderRepository = orderRepository;
     }
 
-    /* TODO: view order (GET) */
-
     @PostMapping(value = "/cart/addProduct")
     public ResponseEntity addProductToCart(
             @RequestHeader("customer-id") String customerId,
-            @RequestBody ProductEntity product) {
+            @RequestBody ProductEntity product,
+            int quantity) {
+        if (quantity < 1) {
+            return new ResponseEntity("Quantity must be greater than zero.", HttpStatus.BAD_REQUEST);
+        }
         // if customer has no cart created yet, create new one
         OrderEntity stagedOrder = this.orderRepository.findByCustomerIdAndStatus(customerId, OrderStatusEnum.STAGED);
         if (stagedOrder == null) {
             stagedOrder = new OrderEntity(OrderStatusEnum.STAGED, customerId);
         }
-        stagedOrder.addProduct(product);
+        stagedOrder.addProduct(product, quantity);
         this.orderRepository.save(stagedOrder);
 
         return new ResponseEntity(HttpStatus.OK);
